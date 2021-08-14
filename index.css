@@ -5,10 +5,11 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #000000;
 }
 
 #mainCanvas
 {
     display: block;
-    border: 1px solid #000000;
+    border: 1px solid #00AA00;
 }
