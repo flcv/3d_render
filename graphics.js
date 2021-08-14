@@ -17,6 +17,17 @@ function draw(obj, targetCanvasContext=CanvasRenderingContext2D, {lineWidth=2, c
             targetCanvasContext.strokeStyle = colour;
             targetCanvasContext.stroke();
         } catch(e){ console.error(e); }
+    } else if(obj instanceof Polygon){
+        try {
+            targetCanvasContext.beginPath();
+            targetCanvasContext.moveTo(obj.vertices.vertex1.x+DRAW_X_OFFSET, obj.vertices.vertex1.y+DRAW_Y_OFFSET);
+            targetCanvasContext.lineTo(obj.vertices.vertex2.x+DRAW_X_OFFSET, obj.vertices.vertex2.y+DRAW_Y_OFFSET);
+            targetCanvasContext.lineTo(obj.vertices.vertex3.x+DRAW_X_OFFSET, obj.vertices.vertex3.y+DRAW_Y_OFFSET);
+            targetCanvasContext.lineTo(obj.vertices.vertex1.x+DRAW_X_OFFSET, obj.vertices.vertex1.y+DRAW_Y_OFFSET);
+            targetCanvasContext.lineWidth = lineWidth;
+            targetCanvasContext.strokeStyle = colour;
+            targetCanvasContext.stroke();
+        } catch(e){ console.error(e); }
     }
 }
 
@@ -82,7 +93,7 @@ class Camera{
                 if(tmpCoords.x >= this.xMin && tmpCoords.x <= this.xMax
                 && tmpCoords.y >= this.yMin && tmpCoords.y <= this.yMax
                 && tmpCoords.z >= this.zMin && tmpCoords.z <= this.zMax){
-                    draw(this.scene.objectList[item], targetCanvasContext, {colour: "#000000"});
+                    draw(this.scene.objectList[item], targetCanvasContext, {colour: "#EEE"});
                 }
             } else if(this.scene.objectList[item] instanceof Line){
                 let tmpVertices = this.scene.objectList[item].vertices; //PREVENT REPETITIVE RE-LOOKUP
@@ -92,7 +103,20 @@ class Camera{
                 && tmpVertices.vertex2.x >= this.xMin && tmpVertices.vertex2.x <= this.xMax //COORDS OF SECOND VERTEX
                 && tmpVertices.vertex2.y >= this.yMin && tmpVertices.vertex2.y <= this.yMax
                 && tmpVertices.vertex2.z >= this.zMin && tmpVertices.vertex2.z <= this.zMax){
-                        draw(this.scene.objectList[item], targetCanvasContext, {colour: "#000000"});
+                        draw(this.scene.objectList[item], targetCanvasContext, {colour: "#EEE"});
+                    }
+            } else if(this.scene.objectList[item] instanceof Polygon){
+                let tmpVertices = this.scene.objectList[item].vertices; //PREVENT REPETITIVE RE-LOOKUP
+                if(tmpVertices.vertex1.x >= this.xMin && tmpVertices.vertex1.x <= this.xMax //COORDS OF FIRST VERTEX
+                && tmpVertices.vertex1.y >= this.yMin && tmpVertices.vertex1.y <= this.yMax
+                && tmpVertices.vertex1.z >= this.zMin && tmpVertices.vertex1.z <= this.zMax
+                && tmpVertices.vertex2.x >= this.xMin && tmpVertices.vertex2.x <= this.xMax //COORDS OF SECOND VERTEX
+                && tmpVertices.vertex2.y >= this.yMin && tmpVertices.vertex2.y <= this.yMax
+                && tmpVertices.vertex2.z >= this.zMin && tmpVertices.vertex2.z <= this.zMax
+                && tmpVertices.vertex3.x >= this.xMin && tmpVertices.vertex3.x <= this.xMax //COORDS OF SECOND VERTEX
+                && tmpVertices.vertex3.y >= this.yMin && tmpVertices.vertex3.y <= this.yMax
+                && tmpVertices.vertex3.z >= this.zMin && tmpVertices.vertex3.z <= this.zMax){
+                        draw(this.scene.objectList[item], targetCanvasContext, {colour: "#EEE"});
                     }
             }
         }
