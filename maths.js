@@ -272,6 +272,12 @@ class Polygon {
     }
 };
 
+class Model {
+    constructor(...polygons, id){
+        this.polygonsList = [...polygons];
+    }
+};
+
 function add(obj1, obj2){
     return {
         x: obj1.coords.x+obj2.coords.x,
