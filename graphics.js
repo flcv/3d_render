@@ -24,7 +24,7 @@ function draw(obj, targetCanvasContext=CanvasRenderingContext2D, {lineWidth=2, c
             targetCanvasContext.lineTo(obj.vertices.vertex2.x+DRAW_X_OFFSET, obj.vertices.vertex2.y+DRAW_Y_OFFSET);
             targetCanvasContext.lineTo(obj.vertices.vertex3.x+DRAW_X_OFFSET, obj.vertices.vertex3.y+DRAW_Y_OFFSET);
             targetCanvasContext.lineTo(obj.vertices.vertex1.x+DRAW_X_OFFSET, obj.vertices.vertex1.y+DRAW_Y_OFFSET);
-            targetCanvasContext.lineWidth = lineWidth;
+            targetCanvasContext.lineWidth = 0.5;
             targetCanvasContext.strokeStyle = colour;
             targetCanvasContext.stroke();
         } catch(e){ console.error(e); }
@@ -88,37 +88,38 @@ class Camera{
 
     drawScene(targetCanvasContext=this.targetCanvasContext){
         for(let item in this.scene.objectList){
-            if(this.scene.objectList[item] instanceof Point){
-                let tmpCoords = this.scene.objectList[item].coords; //PREVENT REPETITIVE RE-LOOKUP
-                if(tmpCoords.x >= this.xMin && tmpCoords.x <= this.xMax
-                && tmpCoords.y >= this.yMin && tmpCoords.y <= this.yMax
-                && tmpCoords.z >= this.zMin && tmpCoords.z <= this.zMax){
+            if(this.scene.objectList[item] instanceof Model){ //MODELS ARE COLLECTIONS OF POLYGONS SO EACH POLYGON MUST BE CHECKED INDIVIDUALLY
+                for(let poly of this.scene.objectList[item].polygonsList){ //GO THROUGH ALL POLYGONS OF MODEL, AND CHECK...
+                    if(this.objectWithinCameraCoundaries(poly.vertices)){ //IF THIS SPECIFIC POLYGON IS WITHIN BOUNDS, THEN DRAW IT
+                        draw(poly, targetCanvasContext, {colour: "#0F0"});
+                    }
+                }
+            } else {
+                if(this.objectWithinCameraCoundaries(this.scene.objectList[item].vertices)){
                     draw(this.scene.objectList[item], targetCanvasContext, {colour: "#EEE"});
                 }
-            } else if(this.scene.objectList[item] instanceof Line){
-                let tmpVertices = this.scene.objectList[item].vertices; //PREVENT REPETITIVE RE-LOOKUP
-                if(tmpVertices.vertex1.x >= this.xMin && tmpVertices.vertex1.x <= this.xMax //COORDS OF FIRST VERTEX
-                && tmpVertices.vertex1.y >= this.yMin && tmpVertices.vertex1.y <= this.yMax
-                && tmpVertices.vertex1.z >= this.zMin && tmpVertices.vertex1.z <= this.zMax
-                && tmpVertices.vertex2.x >= this.xMin && tmpVertices.vertex2.x <= this.xMax //COORDS OF SECOND VERTEX
-                && tmpVertices.vertex2.y >= this.yMin && tmpVertices.vertex2.y <= this.yMax
-                && tmpVertices.vertex2.z >= this.zMin && tmpVertices.vertex2.z <= this.zMax){
-                        draw(this.scene.objectList[item], targetCanvasContext, {colour: "#EEE"});
-                    }
-            } else if(this.scene.objectList[item] instanceof Polygon){
-                let tmpVertices = this.scene.objectList[item].vertices; //PREVENT REPETITIVE RE-LOOKUP
-                if(tmpVertices.vertex1.x >= this.xMin && tmpVertices.vertex1.x <= this.xMax //COORDS OF FIRST VERTEX
-                && tmpVertices.vertex1.y >= this.yMin && tmpVertices.vertex1.y <= this.yMax
-                && tmpVertices.vertex1.z >= this.zMin && tmpVertices.vertex1.z <= this.zMax
-                && tmpVertices.vertex2.x >= this.xMin && tmpVertices.vertex2.x <= this.xMax //COORDS OF SECOND VERTEX
-                && tmpVertices.vertex2.y >= this.yMin && tmpVertices.vertex2.y <= this.yMax
-                && tmpVertices.vertex2.z >= this.zMin && tmpVertices.vertex2.z <= this.zMax
-                && tmpVertices.vertex3.x >= this.xMin && tmpVertices.vertex3.x <= this.xMax //COORDS OF SECOND VERTEX
-                && tmpVertices.vertex3.y >= this.yMin && tmpVertices.vertex3.y <= this.yMax
-                && tmpVertices.vertex3.z >= this.zMin && tmpVertices.vertex3.z <= this.zMax){
-                        draw(this.scene.objectList[item], targetCanvasContext, {colour: "#EEE"});
-                    }
             }
         }
+    }
+
+    objectWithinCameraCoundaries(obj1){
+        if(typeof obj1 != "object"){ return false; }
+        try {
+            var vertices = Object.keys(obj1);
+            for(let v of vertices){
+                if(!(["x", "y", "z"].every(k=>Object.keys(obj1[v]).includes(k)))){ //ONE OF THE OBJECT'S VERTICES DOES NOT CONTAIN ONE OF x, y, z VALUES
+                    return false;
+                }
+                if(obj1[v].x >= this.xMin && obj1[v].x <= this.xMax     //TEST THAT THE COORDS OF THIS SPECIFIC VECTOR
+                    && obj1[v].y >= this.yMin && obj1[v].y <= this.yMax //ARE WITHIN THE CAMERA'S VIEWING BOUNDARIES
+                    && obj1[v].z >= this.zMin && obj1[v].z <= this.zMax){
+                    
+                } else { return false; } //FAIL IF A VERTEX IS NOT WITHIN THE CAMERA'S BOUNDARIES
+            }
+        } catch(e){
+            console.error(e);
+            return false;
+        }    
+        return true;
     }
 };
