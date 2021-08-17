@@ -15,6 +15,17 @@ class Point{
             z: this.z
         };
     }
+    
+    get vertices(){
+        return {
+            vertex1: {
+                x: this.x,
+                y: this.y,
+                z: this.z
+            }
+        };
+    }
+
     set coords(newCoords){
         if(typeof(newCoords)=="object" 
         && (newCoords.x!=null && typeof(newCoords.x)=="number") 
@@ -27,6 +38,10 @@ class Point{
         } else {
             return false; //INVALID ARGUMENTS
         }
+    }
+
+    set vertices(newCoords){
+        return this.coords = newCoords;
     }
     
     // set id(newId){
@@ -69,7 +84,7 @@ class Vector3{
 };
 
 class Line {
-    constructor(point1, point2, translationVector, id=""){
+    constructor(point1, point2, translationVector=new Vector3(0,0,0), id=""){
         //A LINE IS A CONNECTION BETWEEN TWO POINTS
         this.point1 = {
             coords: {
@@ -161,7 +176,7 @@ class Line {
 };
 
 class Polygon {
-    constructor(point1, point2, point3, translationVector, id=""){ 
+    constructor(point1, point2, point3, translationVector=new Vector3(0,0,0), id=""){ 
         //A POLYGON IS THREE SIDED, AND COMPOSED OF THREE VERTICES (POINTS)
         this.point1 = {
             coords: {
@@ -273,7 +288,7 @@ class Polygon {
 };
 
 class Model {
-    constructor(...polygons, id){
+    constructor(...polygons){
         this.polygonsList = [...polygons];
     }
 };
@@ -428,6 +443,6 @@ function rotate(obj1, axis, degrees){
             vertex2: rotatePoint(obj1.rawVertices.vertex2),
             vertex3: rotatePoint(obj1.rawVertices.vertex3)
         };
-    }
+    } 
     
 }

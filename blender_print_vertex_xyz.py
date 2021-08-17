@@ -3,7 +3,7 @@
 
 import bpy
 
-vertices = [(vert.co.x, vert.co.y, vert.co.z) for vert in bpy.context.object.data.vertices]
+vertices = [[vert.co.x, vert.co.y, vert.co.z] for vert in bpy.context.object.data.vertices]
  
 faces = [[vert for vert in polygon.vertices] for polygon in bpy.context.object.data.polygons]
  
