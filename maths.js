@@ -328,18 +328,6 @@ function translate(obj1, obj2){
         }
     } else if(obj1 instanceof Line){
         return new Vector3(obj1.translationVector.x + obj2.coords.x, obj1.translationVector.y + obj2.coords.y, obj1.translationVector.z + obj2.coords.z);
-        // {
-        //     vertex1: {
-        //         x: obj1.coords.vertex1.x + obj2.coords.x,
-        //         y: obj1.coords.vertex1.y + obj2.coords.y,
-        //         z: obj1.coords.vertex1.z + obj2.coords.z
-        //     },
-        //     vertex2: {
-        //         x: obj1.coords.vertex2.x + obj2.coords2.x,
-        //         y: obj1.coords.vertex2.y + obj2.coords2.y,
-        //         z: obj1.coords.vertex2.z + obj2.coords2.z
-        //     }
-        // };
     } else if(obj1 instanceof Polygon){
         return new Vector3(obj1.translationVector.x + obj2.coords.x, obj1.translationVector.y + obj2.coords.y, obj1.translationVector.z + obj2.coords.z);
     }

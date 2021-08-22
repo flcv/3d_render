@@ -3,8 +3,8 @@
 
 import bpy
 
-vertices = [[vert.co.x, vert.co.y, vert.co.z] for vert in bpy.context.object.data.vertices]
+vertices = [[vert.co.x, vert.co.z, vert.co.y] for vert in bpy.context.object.data.vertices]
  
 faces = [[vert for vert in polygon.vertices] for polygon in bpy.context.object.data.polygons]
  
-print('verts = ' + str(vertices) + '\n' + 'faces = ' + str(faces) + '\n')
+print('{\nverts: ' + str(vertices) + ',\n' + 'faces: ' + str(faces) + '\n};\n')
