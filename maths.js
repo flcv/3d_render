@@ -288,7 +288,8 @@ class Polygon {
 };
 
 class Model {
-    constructor(...polygons){
+    constructor(wireframe = false, ...polygons){
+        this.wireframe = wireframe; 
         this.polygonsList = [...polygons];
     }
 };

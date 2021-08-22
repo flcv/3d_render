@@ -31,9 +31,8 @@ window.onload = ()=>{
     const furthestZ = 500; //BOTH WERE CHOSEN ARBITRARILY
     const rotationSpeed=3;
     const translationSpeed = 10;
-    var p1 = new Point(0,0,0);
+    var p1 = new Point(0,0,100);
     // var p2 = new Point(150,0,150);
-
 
     var v1 = new Vector3(0,0,furthestZ);
     var v2 = new Vector3(0,300,0);
@@ -46,9 +45,9 @@ window.onload = ()=>{
     // var po3 = new Polygon(p4, p3, p6, v1);
     // var po4 = new Polygon(p5, p6, p3, v1);
     // var m1 = new Model(po1, po2, po3, po4);
-    var m1 = createModelFromBlender(model_blenderMonkey.verts, model_blenderMonkey.faces, v1);
-    var m2 = createModelFromBlender(model_wonkyTetrahedron.verts, model_wonkyTetrahedron.faces, v2);
-    var m3 = createModelFromBlender(model_cube.verts, model_cube.faces, v1);
+    var m1 = createModelFromBlender(model_blenderMonkey.verts, model_blenderMonkey.faces, {modelTranslationVector: v1});
+    //var m2 = createModelFromBlender(model_wonkyTetrahedron.verts, model_wonkyTetrahedron.faces,{modelTranslationVector: v2});
+    var m3 = createModelFromBlender(model_cube.verts, model_cube.faces, {modelTranslationVector: v1, wireframe: true});
 
     // var v2 = new Vector3(50,50,0);
     // var p6 = new Point(10,-10,-10);
@@ -75,22 +74,24 @@ window.onload = ()=>{
     var boundingBoxR = new Line(new Point(300,200,0),new Point(300,-200,0),v1); 
     var boundingBoxT = new Line(new Point(300,-200,0),new Point(-200,-200,0),v1); 
     var boundingBoxL = new Line(new Point(-200,-200,0),new Point(-200,200,0),v1); 
-    var staticElementsOver = [boundingBoxB,boundingBoxL,boundingBoxR,boundingBoxT];
+    var staticElementsOver = [boundingBoxB,boundingBoxL,boundingBoxR,boundingBoxT,p1];
 
+    var light1 = new Light({x:100,y:100,z:0}, 400, [255,0,0], 1);
     // po1.vertices = centreAtOrigin(po1);
     // po2.vertices = centreAtOrigin(po2);
     // console.log(po1.centre);
     // console.log(centreAtOrigin(po1));
     /*var l2 = new Line(p5,p6);
     var l3 = new Line(p7,p8);*/
-    var s1 = new Scene(p1, m1, m2, m3/*po1, po2, po3, po4*//*l1, l2, l3, p1*/);
+    var s1 = new Scene(/*p1, m2,*/ light1, m1, m3/*po1, po2, po3, po4*//*l1, l2, l3, p1*/);
     var c1 = new Camera(/*-CANVAS_WIDTH/2*/-200, /*CANVAS_WIDTH/2*/300, /*-CANVAS_HEIGHT/2*/-200, /*CANVAS_HEIGHT/2*/200, nearestZ, furthestZ, s1, canvasContext);
     //s1.add(l1);
     var keysDown = new Set();
     var fps = 0;
     var oldTime = 0;
     window.requestAnimationFrame(main);
-
+    //console.log(averageRGB([255,0,0,1], [0,255,0,0.4]));
+    console.log(RGBAToArray("rgba(100,200,1,0)"));
     function main(currentTime){
         //FPS COUNTER
         fps = Math.floor(1000/(currentTime - oldTime));
@@ -117,11 +118,11 @@ window.onload = ()=>{
         drawText(canvasContext, {x: 1, y: 10, text:`${fps} FPS`}); //FPS
         drawText(canvasContext, {x: 1, y: 20, text:instructionsText}); //INSTRUCTIONS
         for(let element of staticElementsUnder){
-            draw(element, canvasContext, {colour: "#444"});
+            draw(element, canvasContext, {colour: "rgba(180,180,180,1)"});
         }
         c1.drawScene();
         for(let element of staticElementsOver){
-            draw(element, canvasContext, {colour: "#BBB"});
+            draw(element, canvasContext, {colour: "rgba(90,90,90,1)"});
         }
         
         

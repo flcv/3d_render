@@ -1,6 +1,5 @@
-// verts = [(-1.0, -1.0, 0.0), (1.0, -1.0, 0.0), (-1.0, 1.0, 0.0), (0.0, 0.0, 2.0)]
-// faces = [[1, 2, 0], [1, 3, 2], [1, 0, 3], [2, 3, 0]]
-function createModelFromBlender(verts, faces, modelTranslationVector=new Vector3(0,0,0), blenderScaleModifier=100){
+
+function createModelFromBlender(verts, faces, {modelTranslationVector=new Vector3(0,0,0), blenderScaleModifier=100, wireframe=false}){
 
     //SANITY CHECK
     if((!Array.isArray(verts) || verts.length===0)
@@ -21,7 +20,7 @@ function createModelFromBlender(verts, faces, modelTranslationVector=new Vector3
         polygonsList.push(new Polygon(pointList[f[0]],pointList[f[1]],pointList[f[2]], modelTranslationVector))
     }
 
-    var returnModel = new Model(...polygonsList);
+    var returnModel = new Model(wireframe, ...polygonsList);
 
     return returnModel;
 }
